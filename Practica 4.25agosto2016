@@ -1,0 +1,31 @@
+install.packages("XLConnect")
+require(XLConnect)
+wb<-loadWorkbook("C:/Users/SALA-C22/Desktop/practica.xls",create=TRUE)
+createSheet(wb,name="SEXO")
+writeWorksheet(wb,name="COND. DE OCUP")
+writeWorksheet(wb,tabla2,"COND. DE OCUP",startRow=1,startCol=2,header=TRUE)
+createSheet(wb,name="POBLACION ACTIVA")
+
+
+require (foreign)
+sdemt<-read.dbf("C:\\Users\\SALA-C21\\Desktop\\Regresión\\SDEMT215.dbf")
+
+####Entidades Jalisco=14 Coahuila=05
+install.packages("questionr")
+require(questionr)
+SDEMT215$ENT <- as.numeric(SDEMT215$ENT)
+wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==05)
+wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==14)
+SDEMT215$SEXO<-factor(SDEMT215$SEX,levels = c(1,2),labels = c("Hombre","Mujer"))
+class(SDEMT215$POS_OCU)
+class(SDEMT215$SEX)
+SDEMT215$POS_OCU <- as.factor(SDEMT215$POS_OCU)
+SDEMT215$POS_OCU<-factor(SDEMT215$POS_OCU,levels = c(1,2,3,4),labels = c("subordinados","Empleadores", "Por cuenta", "Sin paga"))
+wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==05)
+wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==14)
+
+entidad <- subset(SDEMT215,SDEMT215$ENT == 05)
+entidad1 <- subset(SDEMT215,SDEMT215$ENT == 14)
+
+
+entidad3 <- subset(entidad,entidad$ENT == "05" | entidad1$CD_A == "14" ) 
