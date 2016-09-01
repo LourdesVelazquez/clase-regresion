@@ -1,0 +1,40 @@
+##Queremos comprobar la hipotesis que entre mayor ingreso de la familia hay una mayor estatura en los niños
+##H0=r=0 no hay relación
+estatura <- c(1.2,1.23,1.19,1.32,1.28,1.22,1.17,1.29,1.33,1.15)
+eco <-c(110,130,108,167,156,115,104,138,170,107)
+
+
+#1. Obtener gráfica de dispersión
+plot(eco,estatura, pch=13, xlab="ingreso económico", ylab = "estatura", main="gráfica de dispersión", col="pink")
+
+
+#2. Ver la correlación
+#para calcular el coef. de correlación se utiliza cor()
+#la forma general de cor() es...
+###ARGUMENTOS###
+###1.Var. dependiente
+###2.Var. independiente
+###3. Método de correlación
+cor(estatura, eco, method = "pearson")
+
+
+#3. Aplicar una prueba a la correlación para ver que tan confiable es
+cor.test(estatura, eco, method="pearson")
+##si el p-value es menor a .05 rechazamos H0
+##por lo que si existe relación
+
+
+#4. Ya que confirmamos la correlación aplicamos el modelo para aplicar el modelo se utiliza la función lm()
+mod1<-lm(estatura~eco)
+summary(mod1)
+
+#5. Los residuales nos generan las dif. entre los valores ajustados y los reales 
+#en los resultados tenemos los coef. que contienen
+##que expone si los coef. son significativos
+plot(eco,estatura, pch=13, xlab="ingresos", ylab = "estatura", main="gráfica de dispersión")
+#graficar la recta del mod1 en la gráfica de dispersión de las variables en estudio
+abline(mod1)
+
+
+#6. Plantear la ecuación
+estatura=.9323+.0023 *eco
