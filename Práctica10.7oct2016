@@ -1,0 +1,86 @@
+#####Modelo de regresión múltiple
+capa<-c(4330,5500,5500,4700,5200,5500,4700,5500,5800,5000) #inde(x2)
+calidad<-c(2,3,4,3,4,4,4,5,5,5) #inde(x1)
+precio<-c(190,219,249,249,250,340,289,395,439,525) #dep(y)
+mochil <-data.frame(precio,capa,calidad)
+mochil1<-mochil[c(-1,-7,-10),] #borrar renglones, # borrar columnas
+mochil2<-mochil[,-2]
+
+
+
+plot(capa,precio, pch=12, xlab = "capa", ylab = "precio", main="gráfica de dispersión", col="blue")
+cor(precio, capa, method = "pearson")
+cor.test(precio,capa,method="pearson")
+
+plot(calidad,precio, pch=11, xlab = "capa", ylab = "precio", main="gráfica de dispersión", col="blue")
+cor(precio, calidad, method = "pearson")
+cor.test(precio,calidad,method="pearson")
+
+###Compararación de modelos
+#Pretendemeos seleccionar al mejor subconjunto de var. indep.
+#Comparar 3 modelos con la finalidad de aplicar el principio de parsimonia,
+#conocer var. indep. innecesarias para evitar multicolinealidad
+#Comparar 3 modelos:
+#1. precio~capacidad
+#2. precio~calidad
+#3. precio~calidad+capacidad
+###¿Cómo seleccionar el mejor modelo?
+#Criterio de información de Akaike (AIC)
+#El problema de utilizar R^2 para comparar modelos es que al introducir
+#nuevas var al modelo, esta medida siempre crece.
+#El modelo con más var indep. siempre será el mejor ajustado
+#AIC=(n)(log(SCR/n))+2k
+#SCR=suma de cuadrados residuales
+#n= num. de casos en el modelo
+#k= num. de var indep. 
+#El problema es que el único criterio para AIC es mayor el modelo es peor
+#si el AIC es menor el modelo es mejor.
+#El AIC nos va a ayudar a decidir sobre un modelo
+#El metodo mas recomendado es el step by step fn step()
+#3 modalidades:
+##1. forward parte del coef. b0 y de ahi va probando las var indep. para ver cual es la que más aporta
+##2. backward r empieza con todas las var indep. y estudia si el AIC baja cuando hay cambios de var.
+##3. both empieza como el forward pero realiza test para conocer la var indep. menos útil
+
+#El metodo más recomendable es el backward porque tiene un efecto represor que 
+#permite probar cuando una var tiene influencia solo si otra var se mantiene constante
+
+moch<- data.frame(precio, capa, calidad)
+cor(moch, use="everything", method = "pearson")
+mod1<-lm(precio~capa+calidad, data=moch)
+summary(mod1)
+
+step(mod1, direction = "backward")
+
+#Aqui podemos ver que el metodo step analizó 2modelos
+#1. precio~capa+calidad con un AIC=83.90
+#2. precio~calidad con un AIC=83.51
+
+##Metodo both
+step(mod1,direction = "both")
+#Tenemos un resultado igual al de backward por la forma que se construye este metodo
+
+##Metodo forward
+step(mod1,direction = "forward")
+#Solo muestra el modelo completo porque inicia haciendo pruebas con el
+#modelo nulo y solo deja este modelo porque es el que mayor AIC muestra
+
+##En este caso nos quedamos con el mejor AIC que es el modelo de precio~calidad
+mod2<- lm(precio~calidad, data=moch)
+moch$ajus <-fitted(mod2)
+moch$resi<-residuals(mod2)
+moch$rstud<-rstudent(mod2)
+#Ahora probamos el supuesto de Normalidad
+install.packages("lmtest")
+require(lmtest)
+ks.test(moch$rstud,"pnorm")
+#hitograma
+hist(moch$rstud, xlab="residuales", main="Hist residuales")
+#El pvalue para el contraste de normalidad es mayor que .05 (p=.9717)
+#histograma se parece a la distribución normal.
+
+#Homogeneidad de varianzas.
+bptest(mod2,studentize = FALSE, data=moch)
+#la varianza es constante a lo largo de la muestra porque p es mayor a .05
+dwtest(mod2,alternative = "two.sided", data=moch)
+#aceptamos la hipótesis nula 
