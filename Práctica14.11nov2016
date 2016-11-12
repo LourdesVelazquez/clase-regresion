@@ -27,7 +27,7 @@ bf1$edad1  <- ifelse(as.numeric(bf1$edad)>= 0 & as.numeric(bf1$edad)<=9,1,
                     ifelse(as.numeric(bf1$edad)>= 60 & as.numeric(bf1$edad)<=69,7,
                     ifelse(as.numeric(bf1$edad)>= 70 & as.numeric(bf1$edad)<=79,8,
                     ifelse(as.numeric(bf1$edad)>= 80 & as.numeric(bf1$edad)<=89,9,
-                    ifelse(as.numeric(bf1$edad)>= 90 & as.numeric(bf1$edad)<=99,10))))))))))
+                    ifelse(as.numeric(bf1$edad)>= 90 & as.numeric(bf1$edad)<=97,10,11))))))))))
 
 wtd.table(bf1$edad1,weights = bf1$factor)
 
@@ -42,7 +42,7 @@ bf2$edad1  <- ifelse(as.numeric(bf2$edad)>= 0 & as.numeric(bf2$edad)<=9,1,
               ifelse(as.numeric(bf2$edad)>= 60 & as.numeric(bf2$edad)<=69,7,
               ifelse(as.numeric(bf2$edad)>= 70 & as.numeric(bf2$edad)<=79,8,
               ifelse(as.numeric(bf2$edad)>= 80 & as.numeric(bf2$edad)<=89,9,
-              ifelse(as.numeric(bf2$edad)>= 90 & as.numeric(bf2$edad)<=99,10))))))))))
+              ifelse(as.numeric(bf2$edad)>= 90 & as.numeric(bf2$edad)<=97,10,11))))))))))
 
 wtd.table(bf2$edad1,weights = bf2$factor)
 
