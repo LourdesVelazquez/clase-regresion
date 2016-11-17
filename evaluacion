@@ -1,0 +1,93 @@
+install.packages("foreign")
+require(foreign)
+setwd("C://Users//Sala-C21//Downloads")
+soll<-data.frame(read.spss("solorural.sav"))
+
+install.packages("questionr")
+require(questionr)
+
+###Población de 5 a 17 años
+wtd.table(soll$sex, weights = soll$fac_mti)
+###hombres mujeres 
+###4061217 3800117 
+4061217+3800117 
+###Total
+###7861334
+
+
+###Tamaño de la muestra
+table(soll$sex)
+###hombres mujeres 
+###9302    8798 
+9302+8798 
+###Total
+###18100
+
+###Ocupados
+soll1 <- subset(soll,soll$clase2==1)
+wtd.table(soll1$sex,weights = soll1$fac_mti)
+###hombres mujeres 
+###622492  204970 
+622492+204970
+###Total
+###827462
+
+
+###%Ocupados
+
+
+###CARACTERÍSTICAS INDIVIDUALES
+###Ocupados por grupo de edad
+soll1$eda  <- ifelse(as.numeric(soll1$eda)>= 5 & as.numeric(soll1$eda)<=9,1,
+                    ifelse(as.numeric(soll1$eda)>= 10 & as.numeric(soll1$eda)<=13,2,
+                           ifelse(as.numeric(soll1$eda)>= 14 & as.numeric(soll1$eda)<=17,3,4)))
+
+wtd.table(soll1$eda,weights = soll1$fac_mti)
+###Total
+###2      3 
+###158695 668767 
+
+wtd.table(soll1$sex,soll1$eda,weights = soll1$fac_mti)
+###          2      3
+###hombres 121416 501076
+###mujeres  37279 167691
+121416+37279
+501076+167691
+###total2 
+###158695
+
+###total3
+###668767
+
+###Ocupados según asistencia escolar
+wtd.table(soll1$sex,soll1$asis, weights = soll1$fac_mti,na.show = TRUE)
+###          Asiste No Asiste   <NA>
+###  hombres 335572    286920      0
+###  mujeres 107060     97910      0
+###  <NA>         0         0      0
+
+###Total
+wtd.table(soll1$asis, weights = soll1$fac_mti,na.show = TRUE)
+###Asiste No Asiste      <NA> 
+### 442632    384830         0 
+
+
+###CARACTERÍSTICAS DEL HOGAR
+###Tamaño del hogar
+wtd.table(soll1$sex,soll1$tam_hog,weights = soll1$fac_mti,na.show = TRUE)
+###               1 a 3 integrantes 4 a 5 integrantes 6 a 7 intengrantes
+###hombres             55181            149312              65844
+###mujeres             25618             44721              21472
+###<NA>                    0                 0                  0
+###         8 y más   <NA>
+###hombres   35190    316965
+###mujeres    8830    104329
+###<NA>          0      0
+
+###total
+wtd.table(soll1$tam_hog,weights = soll1$fac_mti,na.show = TRUE)
+###1 a 3 integrantes  4 a 5 integrantes 6 a 7 intengrantes 
+###      80799             194033              87316 
+###8 y más               <NA> 
+###  44020             421294 
+> 
