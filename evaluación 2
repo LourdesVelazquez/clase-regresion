@@ -1,54 +1,54 @@
 #t_per~ sex + edad + asis + sex_jefe + escol_jefe + t_apo1 + ocu_jefe
 
-table(ocu$t_per)
+table(soll1$t_per)
 
-#    1    2    3    4 
-# 1615  588   75    1 
+###    1    2    3    4 
+### 1615  588   75    1 
 
-#instalar un paquete para recodificar
+###Instalar paquete para recodificar
 install.packages("plyr")
 library(plyr)
 
-#Nueva forma para recodificar una variable#
-ocu$t_per<- revalue(factor(ocu$t_per), c("1"="familia","2"="No familiar","3"="Cuenta Propia", "4"=NA))
-table(ocu$t_per)
+###Nueva forma para recodificar una variable
+soll1$t_per<- revalue(factor(soll1$t_per), c("1"="Familiar","2"="No familiar","3"="Cuenta Propia", "4"=NA))
+table(soll1$t_per)
 
-#limpiar la base
-table(ocu$sex)
-table(ocu$edad,ocu$eda)
-table(ocu$asis)
-table(ocu$sex_jefe)
-table(ocu$escol_jefe)
-table(ocu$t_apo1)
-table(ocu$ocu_jefe)
+###Limpiar la base
+table(soll1$sex)
+table(soll1$edad,solo$eda)
+table(soll1$asis)
+table(soll1$sex_jefe)
+table(soll1$escol_jefe)
+table(soll1$t_apo1)
+table(sol1$ocu_jefe)
 
-ocu$escol_jefe<- revalue(factor(ocu$escol_jefe), c("7"=NA))
+soll1$escol_jefe<- revalue(factor(soll1$escol_jefe), c("7"=NA))
 
-wtd.table(ocu$escol_jefe, weights = ocu$fac_mti, na.show = TRUE)
+wtd.table(soll1$escol_jefe, weights = soll1$fac_mti, na.show = TRUE)
 
-wtd.table(ocu$t_per, weights = ocu$fac_mti, na.show = TRUE)
+wtd.table(soll1$t_per, weights = soll1$fac_mti, na.show = TRUE)
 
 
 
-###modelo de regresión logistica
+###Modelo de regresión logistica
 install.packages("nnet")
 require(nnet)
 
-modelo<- multinom(t_per~1, data = ocu,trace=FALSE)
+mod1<- multinom(t_per~1, data = ocu,trace=FALSE)
 
-summary(modelo)
+summary(mod1)
 
-modelofinal<- multinom(t_per~sex+edad+asis+sex_jefe+escol_jefe+t_apo1+ocu_jefe,data = ocu,trace=FALSE)
+modfin<- multinom(t_per~sex+edad+asis+sex_jefe+escol_jefe+t_apo1+ocu_jefe,data = ocu,trace=FALSE)
 
-s<-summary(modelofinal,wald = T)
+g<-summary(modfin,wald = T)
 
-print(s)
+print(g)
 
-######tabla en latex######
+######Tabla en latex
 
 install.packages("stargazer")
 require(stargazer)
 
-g<-stargazer (modelofinal, type = 'html', title = "coeficientes", summary=T)
+s<-stargazer (modfin, type = 'html', title = "coeficientes", summary=T)
 
-stargazer(modelofinal, type = 'text', title = "regresión logistica",digits = 2,out="C://Users//Sala-C22//Desktop//regresionlogistica.txt")
+stargazer(modfin, type = 'text', title = "logit",digits = 2,out="C://Users//Sala-C21//Desktop//luly.txt")
